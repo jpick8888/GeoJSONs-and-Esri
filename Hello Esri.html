@@ -1,44 +1,62 @@
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>ArcGIS Maps SDK for JavaScript Tutorials: Display a map</title>
+<!DOCTYPE html>
+<html lang="en">
 
-    <style>
-      html,
-      body,
-      #viewDiv {
-        padding: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
-      }
-    </style>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>ArcGIS Maps SDK for JavaScript: Display GeoJSON</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css">
-    <script src="https://js.arcgis.com/4.28/"></script>
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
 
-    <script>
-      require(["esri/config", "esri/Map", "esri/views/MapView"], function(esriConfig, Map, MapView) {
+  <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.28/"></script>
 
-        esriConfig.apiKey = "AAPK6a0e40e0c7584766bd0465bfdf4e9c47A0l6-hh-vuT_78RTwWVul2CsxgjEGw0QVGUBaBJUYZ_C3oE3ps1rsei8uf5gB6HW";
+  <script>
+    require(["esri/Map", "esri/layers/GeoJSONLayer", "esri/views/MapView"], (
+      Map,
+      GeoJSONLayer,
+      MapView
+    ) => {
+      // If GeoJSON files are not on the same domain as your website, a CORS enabled server
+      // or a proxy is required.
+      const url = "https://raw.githubusercontent.com/jpick8888/GeoJSONs-and-Esri/main/MegaCities.geojson";
 
-        const map = new Map({
-          basemap: "arcgis/topographic" // basemap styles service
-        });
+      const template = {
+        title: "City Info",
+        content: "City: {City} <br> Population (2015): {Pop_2015}",
+      };
 
-        const view = new MapView({
-          map: map,
-          center: [-118.805, 34.027], // Longitude, latitude
-          zoom: 13, // Zoom level
-          container: "viewDiv" // Div element
-        });
-
+      const geojsonLayer = new GeoJSONLayer({
+        url: url,
+        popupTemplate: template,
       });
-    </script>
 
-  </head>
-  <body>
-    <div id="viewDiv"></div>
-  </body>
+      const map = new Map({
+        basemap: "gray-vector",
+        layers: [geojsonLayer]
+      });
+
+      const view = new MapView({
+        container: "viewDiv",
+        center: [0, 0], // Center coordinates based on your data
+        zoom: 3, // Adjust the zoom level
+        map: map
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+</body>
+
 </html>
